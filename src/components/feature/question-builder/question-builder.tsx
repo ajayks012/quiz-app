@@ -17,7 +17,7 @@ import {
   Input,
   Select,
 } from '@/components/ui'
-import type { QuizFormData } from './quiz-form.schema'
+import type { QuizFormData } from '../quiz-form/quiz-form.schema'
 
 export interface QuestionBuilderProps {
   control: Control<QuizFormData>
