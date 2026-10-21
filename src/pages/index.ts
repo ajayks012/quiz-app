@@ -1,0 +1,5 @@
+export * from './quiz-list-page'
+export * from './admin-dashboard-page'
+export * from './quiz-take-page'
+export * from './quiz-results-page'
+export * from './leaderboard-page'
