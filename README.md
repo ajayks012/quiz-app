@@ -151,10 +151,39 @@ A thorough manual testing checklist covering all 10 core functional and non-func
 
 ---
 
-## Agent Skills Used
+## AI Usage
 
-This application was engineered using specialized agent intelligence skills:
+This project was built through a human-in-the-loop pair programming workflow between the developer and AI agentic tooling.
 
-- **`ponytail`**: Lazy senior developer workflow prioritizing the smallest, cleanest change that fully solves the problem—enforcing strict DRY architecture, zero bloated dependencies, 100% test coverage, and clear, readable code.
-- **`ui-ux-pro-max`**: Design and user experience intelligence applied to build responsive layouts (mobile, tablet, desktop), robust WCAG 2.1 AA accessibility (focus rings, ARIA landmarks, screen reader announcements), tailored color palettes, and seamless dark mode theming.
-- **`graphify`**: Knowledge graph and architectural analysis engine that generated full structural AST dependencies, community clusters, god node identification, and an interactive HTML visualizer (`graphify-out/graph.html`) for codebase comprehension.
+### Tools Used
+
+- **ChatGPT**: Used to draft the initial step-by-step implementation plan based on the assignment PDF requirements and the developer's instructions on how to plan it (with the developer subsequently reviewing and rewriting it).
+- **Antigravity IDE**: Google DeepMind's agentic development environment used to autonomously execute plan tasks, inspect browser DOM states, and run verification pipelines.
+- **Specialized Agent Skills**:
+  - **`ponytail`**: Enforced senior engineering discipline—focusing on minimal working diffs, clean DRY architecture, eliminating boilerplate, and maintaining comprehensive test coverage.
+  - **`ui-ux-pro-max`**: Design system intelligence used for typography scales, color harmony, WCAG 2.1 AA accessibility (keyboard focus rings, ARIA roles, live regions), responsive layout breakpoints, and dark mode theming.
+  - **`graphify`**: Codebase knowledge graph analysis generating visual AST dependencies, community clusters, and god node identification (`graphify-out/graph.html`).
+- **Base Stack & Scaffolding**: The developer initialized the repository using Vite's React-TS template and pre-selected core architectural libraries (`@tanstack/react-router`, `tailwindcss` v4, `lucide-react`, `zustand`, `react-hook-form`, `zod`, `vitest`).
+
+### What Tools Were Used For
+
+- **Implementation & Task Execution**: Translating requirements from the specification PDF and the developer's architecture plan (`plan.md`) into working code across repositories, domain services, store hooks, and UI layers.
+- **UI/UX Design & Styling**: Designing accessible atomic UI primitives (buttons, dialogs, form controls, tables, badges) with Tailwind CSS v4, custom variants (CVA), and dark mode support.
+- **Automated Testing**: Writing comprehensive test suites (49 test files, 210 tests) covering services, custom hooks, atomic components, and end-to-end flows using Vitest and React Testing Library.
+- **Debugging & Iterative Refinement**: When human manual testing identified edge cases (e.g., button inline icon alignment, admin modal form submission validation, tab navigation separation), prompts were refined to inspect the running browser and apply targeted fixes.
+- **Code Refactoring & Organization**: Reorganizing all components and pages into self-contained directories with co-located tests and cleaning up unused boilerplate files.
+
+### Code Attribution & AI-Generated Components
+
+- **Custom Atomic UI Primitives (`src/components/ui/`)**: All 22 accessible UI components (Buttons, Badges, Modals, Forms, Selects, Tables, Toaster, Layouts) and their CVA variant definitions.
+- **Feature Components (`src/components/feature/`)**: The Quiz Builder form (`QuizForm`, `QuestionBuilder`), Quiz Cards, Question Cards, and User Switcher.
+- **Domain Services & Repositories (`src/services/`, `src/repositories/`)**: `QuizService` business orchestration (filtering, scoring, time-limit enforcement, leaderboards) and `StorageRepository` (localStorage persistence, cross-tab event synchronization, factory seed recovery).
+- **Page Implementations (`src/pages/`)**: `AdminDashboardPage` (with 2-tab view separating quizzes management from factory data reset), `QuizListPage`, `QuizTakePage`, `QuizResultsPage`, and `LeaderboardPage`.
+- **Test Suites (`src/**/*.test.tsx`, `src/**/*.test.ts`)**: 100% of unit, component, hook, and E2E integration test suites.
+
+### Human-in-the-Loop Development Process
+
+1. **Initial Setup & Architecture Decisions**: The developer initialized the repository via Vite, installed core dependencies, and established the clean-architecture requirements.
+2. **Planning**: The implementation plan was drafted by ChatGPT based on explicit guidance from the developer on how to plan and structure the solution. The developer then reviewed the plan and rewrote parts that were incorrect or misaligned with the requirements.
+3. **Execution**: Antigravity IDE was used to implement the plan tasks systematically one by one.
+4. **Manual Testing & Prompt Refinement**: After every major task, the developer manually verified the feature in the browser. If behavior deviated from expectations, prompts were refined with feedback, screenshots, or error logs to guide iterative fixes.
