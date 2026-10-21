@@ -155,16 +155,39 @@ export function AdminDashboardPage({ service = quizService }: AdminDashboardPage
     try {
       if (editingQuiz) {
         await service.updateQuiz(editingQuiz.id, data)
+        toast.success(`Quiz "${data.title}" was updated successfully.`, 'Quiz Updated')
       } else {
         await service.createQuiz(data)
+        toast.success(`Quiz "${data.title}" was created successfully.`, 'Quiz Created')
       }
       setIsFormOpen(false)
       setEditingQuiz(null)
       notifySync()
       const updated = await service.getQuizzes()
       setQuizzes(updated)
+      setSearch('')
+
+      // Automatically navigate to the page where the new or updated quiz appears
+      const sortedList = [...updated].sort((a, b) => {
+        let cmp = 0
+        if (sortField === 'title') {
+          cmp = a.title.localeCompare(b.title)
+        } else if (sortField === 'questions') {
+          cmp = a.questions.length - b.questions.length
+        } else if (sortField === 'timing') {
+          const timeA = a.timeLimitSeconds ?? a.perQuestionSeconds ?? 0
+          const timeB = b.timeLimitSeconds ?? b.perQuestionSeconds ?? 0
+          cmp = timeA - timeB
+        }
+        return sortAsc ? cmp : -cmp
+      })
+      const quizIndex = sortedList.findIndex((q) => q.title === data.title)
+      if (quizIndex >= 0) {
+        setPage(Math.floor(quizIndex / pageSize) + 1)
+      }
     } catch (err) {
       console.error('Failed to save quiz', err)
+      toast.error('Failed to save quiz. Please try again.', 'Save Error')
     } finally {
       setIsSaving(false)
     }

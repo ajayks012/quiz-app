@@ -42,8 +42,8 @@ export type Question = z.infer<typeof QuestionSchema>
 // 5. Quiz Model
 export const QuizSchema = z.object({
   id: z.string().min(1),
-  title: z.string().min(3, 'Title must be at least 3 characters'),
-  description: z.string().min(1, 'Description is required'),
+  title: z.string().min(1, 'Title is required'),
+  description: z.string(),
   countries: z.array(z.string()).min(1, 'Select at least one eligible country'),
   timeLimitSeconds: z.number().int().positive('Time limit must be positive').nullable(),
   perQuestionSeconds: z.number().int().positive().nullable(),

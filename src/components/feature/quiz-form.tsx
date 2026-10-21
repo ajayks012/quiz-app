@@ -1,8 +1,13 @@
 import * as React from 'react'
-import { useForm, useWatch } from 'react-hook-form'
+import {
+  useForm,
+  useWatch,
+  type SubmitHandler,
+  type SubmitErrorHandler,
+} from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Globe, Save, X } from 'lucide-react'
-import { Button, ConfirmDialog, Input, MultiSelect, Switch, TextArea } from '@/components/ui'
+import { Button, ConfirmDialog, Input, MultiSelect, Switch, TextArea, toast } from '@/components/ui'
 import { QuestionBuilder } from './question-builder'
 import { QuizFormSchema, type QuizFormData } from './quiz-form.schema'
 import { useAppStore } from '@/store'
@@ -110,9 +115,28 @@ export function QuizForm({ initialData, onSubmit, onCancel, isSubmitting = false
   const watchedTitle = useWatch({ control, name: 'title' })
   const watchedDescription = useWatch({ control, name: 'description' })
 
+  const onValid: SubmitHandler<QuizFormData> = (data) => {
+    return onSubmit(data)
+  }
+
+  const onInvalid: SubmitErrorHandler<QuizFormData> = (fieldErrors) => {
+    const errorEntries = Object.entries(fieldErrors)
+    if (errorEntries.length > 0) {
+      const [field, err] = errorEntries[0]
+      let msg = (err as { message?: string })?.message
+      if (!msg && field === 'questions') {
+        msg = 'Please fill in question texts, answer options, and select correct answers.'
+      }
+      toast.error(msg || 'Please fix form validation errors before saving.', 'Form Incomplete')
+    }
+  }
+
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col h-full max-h-[88vh]">
+      <form
+        onSubmit={handleSubmit(onValid, onInvalid)}
+        className="flex flex-col h-full max-h-[88vh]"
+      >
         {/* Modal Sticky Header */}
         <div className="px-6 py-4 pr-12 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-10 shrink-0">
           <h2 className="text-xl font-bold text-slate-900 dark:text-white">

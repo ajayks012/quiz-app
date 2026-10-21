@@ -28,6 +28,15 @@ export class StorageRepository {
       if (validated.success) {
         return validated.data
       }
+      if (
+        parsed &&
+        typeof parsed === 'object' &&
+        Array.isArray(parsed.quizzes) &&
+        Array.isArray(parsed.users)
+      ) {
+        console.warn('Storage data schema discrepancy:', validated.error)
+        return parsed as SeedData
+      }
       return this.reset()
     } catch {
       return this.reset()
