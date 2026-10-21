@@ -1,76 +1,150 @@
-# React + TypeScript + Vite
+# Enterprise Quiz Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A responsive, accessible, full-featured client-side Quiz Application built with React 19, TypeScript, Tailwind CSS v4, and Vitest.
 
-Currently, two official plugins are available:
+## Quick Start
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+### Prerequisites
 
-## React Compiler
+- Node.js >= 18
+- pnpm >= 8 (or npm / yarn)
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+### Installation & Development
 
-Note: This will impact Vite dev & build performances.
-You can also try [the experimental native React Compiler support in plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md#rust-react-compiler) by using `compiler: true` in the plugin options instead of using the Babel plugin.
+```bash
+# Install dependencies
+pnpm install
 
-## Expanding the ESLint configuration
+# Start development server
+pnpm dev
+# App is available at http://localhost:5173
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+# Run full test suite (unit, hooks, components, E2E)
+pnpm test
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+# Run linter
+pnpm run lint
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+# Format code
+pnpm run format
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Production build
+pnpm run build
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Architecture Overview
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+The application follows a strictly layered, decoupled clean architecture that separates domain entities, persistence mechanisms, business orchestration, UI presentation, and application state.
+
 ```
+┌────────────────────────────────────────────────────────┐
+│               Pages & Routing Layer                    │
+│    (/, /quiz/:id, /results/:id, /leaderboard, /admin)  │
+└──────────────────────────┬─────────────────────────────┘
+                           │
+┌──────────────────────────▼─────────────────────────────┐
+│          Custom Atomic UI Primitives & Features         │
+│  Button, Card, Dialog, Table, Form, QuizQuestionCard   │
+└──────────────────────────┬─────────────────────────────┘
+                           │
+┌──────────────────────────▼─────────────────────────────┐
+│             Application Store & Hooks                  │
+│       useAppStore, useQuizAttempt, useCountdown         │
+└──────────────────────────┬─────────────────────────────┘
+                           │
+┌──────────────────────────▼─────────────────────────────┐
+│              Domain Services (QuizService)             │
+│    Business Logic, Timers, Scoring, Validation rules    │
+└──────────────────────────┬─────────────────────────────┘
+                           │
+┌──────────────────────────▼─────────────────────────────┐
+│          Repository Layer (StorageRepository)          │
+│   localStorage adapter, JSON schema seed, event bus    │
+└────────────────────────────────────────────────────────┘
+```
+
+### Layer Responsibilities
+
+1. **Repository Layer (`src/repositories/`):**
+   - Encapsulates `localStorage` persistence under the `quiz_app_v1` namespace.
+   - Handles automated seeding from initial dataset, corrupted data recovery, and cross-tab multi-window synchronisation via `window.addEventListener('storage', ...)`.
+2. **Service Layer (`src/services/`):**
+   - Pure domain business logic: quiz filtering, attempt validation, question scoring, time limit enforcement, and leaderboard computation.
+3. **Store Layer (`src/store/`):**
+   - React state synchronization via custom store subscriptions (`useSyncExternalStore`), ensuring multi-tab and multi-component state reactivity without heavy external libraries.
+4. **Presentation & UI Primitives (`src/components/ui/` & `src/components/feature/`):**
+   - Reusable design system tokens and accessible primitives (radix-inspired accessible patterns, keyboard navigation, ARIA live announcements). Zero duplicated presentation logic.
+
+---
+
+## Key Architectural Choices & Libraries
+
+The application dependencies are selected and prioritized based on architectural impact—from core framework and routing down to styling and testing:
+
+| Priority | Dependency                | Purpose                         | Rationale                                                                                                                                                   |
+| :------: | :------------------------ | :------------------------------ | :---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|  **1**   | **React 19 & TypeScript** | Core framework & type system    | Concurrent rendering, native React Compiler optimizations, and end-to-end static type safety.                                                               |
+|  **2**   | **TanStack Router**       | Type-safe client routing        | First-class type-safe navigation, search params management (filters, pagination), and seamless layout nesting with zero runtime route mismatch errors.      |
+|  **3**   | **Zustand**               | Global client state             | Minimalist, boilerplate-free state store for active user switching, theme state, and cross-component sync ticks without React Context re-render waterfalls. |
+|  **4**   | **React Hook Form**       | Dynamic form orchestration      | Uncontrolled form inputs delivering optimal performance for deeply nested dynamic forms (Quiz Builder, Question Builder) with isolated field re-renders.    |
+|  **5**   | **Zod**                   | Runtime schema validation       | Strict validation contracts for quiz creation/editing, question options, and validating untrusted or corrupted `localStorage` payload data at the boundary. |
+|  **6**   | **Tailwind CSS v4**       | Design system & styling         | Zero-runtime CSS variable architecture, sleek utility classes, and seamless class-based dark mode (`@custom-variant dark`).                                 |
+|  **7**   | **Framer Motion**         | Micro-interactions & animations | Fluid question slide transitions and gauge animations with built-in accessibility compliance (`prefers-reduced-motion`).                                    |
+|  **8**   | **Vitest & RTL**          | Unit, component & E2E testing   | Sub-second ESM test runner unified with the Vite pipeline, executing 49 suites (208 tests) covering services, hooks, components, and end-to-end flows.      |
+|  **9**   | **Lucide React**          | Iconography                     | High-performance, tree-shakeable, and accessible SVG icons.                                                                                                 |
+
+---
+
+## Data Model & Persistence Strategy
+
+All entities conform to TypeScript definitions in `src/types/models.ts`:
+
+- **`User`**: `id`, `name`, `email`, `role ('admin' | 'user')`, `avatarUrl`.
+- **`Quiz`**: `id`, `title`, `description`, `category`, `difficulty`, `timeLimitMinutes`, `perQuestionTimerSeconds`, `passingScore`, `allowRetake`, `questions`, `published`.
+- **`Question`**: `id`, `text`, `type ('single' | 'multiple')`, `points`, `options`, `explanation`.
+- **`QuizAttempt`**: `id`, `quizId`, `userId`, `answers`, `startedAt`, `completedAt`, `score`, `passed`, `timeSpentSeconds`, `status ('in_progress' | 'completed' | 'abandoned')`.
+
+### Multi-Tab Synchronization
+
+Storage mutations dispatch a localized custom event as well as standard browser `storage` events. When state changes in one window or tab, any other active tab updates in real-time without requiring a page reload.
+
+---
+
+## Testing Strategy & QA
+
+### Test Suites
+
+- **Unit Tests:** `QuizService` methods, scoring calculations, time formatting, storage serialization.
+- **Hook Tests:** `useQuizAttempt`, `useCountdown` (accurate recovery after page reload), and theme synchronization.
+- **Component Tests:** Quiz builder, question transitions, keyboard shortcuts (1–9 options, Enter submission), accessible modals, and error boundaries.
+- **End-to-End Flow:** [src/test/quiz-e2e-flow.test.tsx](file:///home/ajay/Personal/quiz-app/src/test/quiz-e2e-flow.test.tsx) covers the complete journey from Catalog &rarr; Start/Retake &rarr; Sequential Question Attendance &rarr; Submit &rarr; Results breakdown &rarr; Leaderboard position.
+
+### Manual Testing Checklist
+
+A thorough manual testing checklist covering all 10 core functional and non-functional requirements from the specification PDF is located in:
+👉 **[MANUAL_TESTING_CHECKLIST.md](./MANUAL_TESTING_CHECKLIST.md)**
+
+---
+
+## Assumptions & Limitations
+
+### Assumptions
+
+1. Client-only environment: All authentication and user switching operates in mock demonstration mode without a backend server or JWT auth.
+2. Local Storage constraints: Datasets are assumed to fit comfortably within the browser's 5MB `localStorage` limit.
+3. System clock: Timer durations and timestamps rely on the client's monotonic time differences (`performance.now()` / `Date.now()`).
+
+### Limitations
+
+1. No Server-Side Scoring: In a production environment with sensitive assessments, answer keys and scoring must live behind a secure backend API to prevent client inspection.
+2. Local Media: Image uploads in the quiz builder use local object URLs or external image URLs rather than cloud storage (e.g. S3).
+
+---
+
+## Future Improvements
+
+1. **Backend Integration:** Replace `StorageRepository` with a REST / GraphQL client targeting a PostgreSQL / Node.js backend.
+2. **Offline Support:** Register a Service Worker for offline PWA quiz completion with background sync.
+3. **Advanced Analytics:** Add question discrimination index, average drop-off rates, and score bell curves for quiz creators.
