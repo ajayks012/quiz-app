@@ -1,10 +1,5 @@
 import * as React from 'react'
-import {
-  useForm,
-  useWatch,
-  type SubmitHandler,
-  type SubmitErrorHandler,
-} from 'react-hook-form'
+import { useForm, useWatch, type SubmitHandler, type SubmitErrorHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Globe, Save, X } from 'lucide-react'
 import { Button, ConfirmDialog, Input, MultiSelect, Switch, TextArea, toast } from '@/components/ui'

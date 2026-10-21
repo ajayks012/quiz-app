@@ -116,12 +116,42 @@ describe('AdminDashboardPage (Task 40-44)', () => {
     })
   })
 
+  it('switches between Quizzes and Reset tabs with mouse and keyboard', async () => {
+    render(<AdminDashboardPage service={mockService} />)
+
+    await waitFor(() => {
+      expect(screen.getByText('JavaScript Basics')).toBeInTheDocument()
+    })
+
+    const quizzesTab = screen.getByRole('tab', { name: /quizzes/i })
+    const resetTab = screen.getByRole('tab', { name: /reset data/i })
+
+    expect(quizzesTab).toHaveAttribute('aria-selected', 'true')
+    expect(resetTab).toHaveAttribute('aria-selected', 'false')
+
+    // Click Reset tab
+    fireEvent.click(resetTab)
+    expect(resetTab).toHaveAttribute('aria-selected', 'true')
+    expect(quizzesTab).toHaveAttribute('aria-selected', 'false')
+    expect(screen.getByRole('heading', { name: /reset application data/i })).toBeInTheDocument()
+    expect(screen.queryByLabelText(/search quizzes/i)).not.toBeInTheDocument()
+
+    // Test keyboard navigation (ArrowLeft switches back to Quizzes)
+    fireEvent.keyDown(resetTab, { key: 'ArrowLeft' })
+    expect(quizzesTab).toHaveAttribute('aria-selected', 'true')
+    expect(screen.getByLabelText(/search quizzes/i)).toBeInTheDocument()
+  })
+
   it('opens reset confirmation dialog and resets data when confirmed', async () => {
     render(<AdminDashboardPage service={mockService} />)
 
     await waitFor(() => {
       expect(screen.getByText('JavaScript Basics')).toBeInTheDocument()
     })
+
+    // Switch to Reset Data tab
+    const resetTab = screen.getByRole('tab', { name: /reset data/i })
+    fireEvent.click(resetTab)
 
     const resetBtn = screen.getByRole('button', { name: /reset all data to seed/i })
     expect(resetBtn).toBeInTheDocument()
