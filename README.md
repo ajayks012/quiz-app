@@ -148,3 +148,13 @@ A thorough manual testing checklist covering all 10 core functional and non-func
 1. **Backend Integration:** Replace `StorageRepository` with a REST / GraphQL client targeting a PostgreSQL / Node.js backend.
 2. **Offline Support:** Register a Service Worker for offline PWA quiz completion with background sync.
 3. **Advanced Analytics:** Add question discrimination index, average drop-off rates, and score bell curves for quiz creators.
+
+---
+
+## Agent Skills Used
+
+This application was engineered using specialized agent intelligence skills:
+
+- **`ponytail`**: Lazy senior developer workflow prioritizing the smallest, cleanest change that fully solves the problem—enforcing strict DRY architecture, zero bloated dependencies, 100% test coverage, and clear, readable code.
+- **`ui-ux-pro-max`**: Design and user experience intelligence applied to build responsive layouts (mobile, tablet, desktop), robust WCAG 2.1 AA accessibility (focus rings, ARIA landmarks, screen reader announcements), tailored color palettes, and seamless dark mode theming.
+- **`graphify`**: Knowledge graph and architectural analysis engine that generated full structural AST dependencies, community clusters, god node identification, and an interactive HTML visualizer (`graphify-out/graph.html`) for codebase comprehension.
