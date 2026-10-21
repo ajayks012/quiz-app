@@ -60,7 +60,14 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             {leftIcon}
           </span>
         )}
-        <span className={cn(loading && 'invisible')}>{children}</span>
+        <span
+          className={cn(
+            'inline-flex items-center justify-center gap-2 flex-wrap text-center max-w-full leading-tight [&_svg]:shrink-0',
+            loading && 'invisible',
+          )}
+        >
+          {children}
+        </span>
         {!loading && rightIcon && (
           <span className="inline-flex shrink-0 items-center justify-center" aria-hidden="true">
             {rightIcon}

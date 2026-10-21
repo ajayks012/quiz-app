@@ -3,7 +3,7 @@ import { focusRing } from '@/styles'
 
 export const buttonVariants = cva(
   [
-    'inline-flex items-center justify-center font-medium rounded-lg select-none whitespace-nowrap',
+    'inline-flex items-center justify-center font-medium rounded-lg select-none text-center leading-tight flex-wrap',
     'transition-all duration-200 ease-in-out cursor-pointer',
     focusRing,
     'disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none',
@@ -25,10 +25,10 @@ export const buttonVariants = cva(
           'bg-emerald-600 text-white shadow-xs hover:bg-emerald-700 active:bg-emerald-800 dark:bg-emerald-500 dark:hover:bg-emerald-600',
       },
       size: {
-        xs: 'h-7 px-2.5 text-xs gap-1.5',
-        sm: 'h-8 px-3 text-xs gap-1.5',
-        md: 'h-9 px-4 text-sm gap-2',
-        lg: 'h-10 px-5 text-base gap-2.5',
+        xs: 'min-h-7 py-1 px-2.5 text-xs gap-1.5',
+        sm: 'min-h-8 py-1 px-3 text-xs gap-1.5',
+        md: 'min-h-9 py-1.5 px-4 text-sm gap-2',
+        lg: 'min-h-10 py-2 px-5 text-base gap-2.5',
       },
       iconOnly: {
         true: 'p-0',
@@ -43,22 +43,22 @@ export const buttonVariants = cva(
       {
         size: 'xs',
         iconOnly: true,
-        className: 'w-7 h-7 px-0',
+        className: 'w-7 h-7 min-h-7 px-0 py-0',
       },
       {
         size: 'sm',
         iconOnly: true,
-        className: 'w-8 h-8 px-0',
+        className: 'w-8 h-8 min-h-8 px-0 py-0',
       },
       {
         size: 'md',
         iconOnly: true,
-        className: 'w-9 h-9 px-0',
+        className: 'w-9 h-9 min-h-9 px-0 py-0',
       },
       {
         size: 'lg',
         iconOnly: true,
-        className: 'w-10 h-10 px-0',
+        className: 'w-10 h-10 min-h-10 px-0 py-0',
       },
     ],
     defaultVariants: {

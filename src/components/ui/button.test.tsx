@@ -99,6 +99,23 @@ describe('Button Component', () => {
     expect(button.className).toContain('w-9 h-9')
   })
 
+  it('renders inline icon and text inside children with wrapping support', () => {
+    render(
+      <Button>
+        <span data-testid="child-icon">▶</span>
+        <span>Start Quiz</span>
+      </Button>,
+    )
+    const button = screen.getByRole('button', { name: /start quiz/i })
+    const contentWrapper = button.querySelector('span.inline-flex')
+    expect(contentWrapper).toBeInTheDocument()
+    expect(contentWrapper?.className).toContain('inline-flex')
+    expect(contentWrapper?.className).toContain('items-center')
+    expect(contentWrapper?.className).toContain('gap-2')
+    expect(contentWrapper?.className).toContain('flex-wrap')
+    expect(contentWrapper?.className).toContain('text-center')
+  })
+
   it('forwards ref correctly', () => {
     const ref = React.createRef<HTMLButtonElement>()
     render(<Button ref={ref}>Ref button</Button>)
