@@ -1,6 +1,5 @@
 export * from './user-switcher'
 export * from './quiz-card'
-export * from './quiz-form.schema'
 export * from './question-builder'
 export * from './quiz-form'
 export * from './quiz-start-card'

@@ -9,8 +9,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  Input,
 } from './index'
+import { Input } from '../input'
 
 interface FormValues {
   username: string

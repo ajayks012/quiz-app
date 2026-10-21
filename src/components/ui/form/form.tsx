@@ -7,7 +7,7 @@ import {
   type FieldValues,
 } from 'react-hook-form'
 import { cn } from '@/utils'
-import { Label } from './label'
+import { Label } from '../typography'
 
 export const Form = FormProvider
 
