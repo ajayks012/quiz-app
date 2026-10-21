@@ -277,10 +277,11 @@ export function AdminDashboardPage({ service = quizService }: AdminDashboardPage
               tabIndex={activeTab === 'quizzes' ? 0 : -1}
               onClick={() => setActiveTab('quizzes')}
               onKeyDown={(e) => handleTabKeyDown(e, 'quizzes')}
-              className={`inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-500 ${activeTab === 'quizzes'
+              className={`inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-500 ${
+                activeTab === 'quizzes'
                   ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs font-semibold'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
-                }`}
+              }`}
             >
               <BookOpen className="w-4 h-4" />
               <span>Quizzes</span>
@@ -302,10 +303,11 @@ export function AdminDashboardPage({ service = quizService }: AdminDashboardPage
               tabIndex={activeTab === 'reset' ? 0 : -1}
               onClick={() => setActiveTab('reset')}
               onKeyDown={(e) => handleTabKeyDown(e, 'reset')}
-              className={`inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-500 ${activeTab === 'reset'
+              className={`inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-500 ${
+                activeTab === 'reset'
                   ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs font-semibold'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
-                }`}
+              }`}
             >
               <RotateCcw className="w-4 h-4" />
               <span>Reset Data</span>

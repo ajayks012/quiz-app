@@ -24,7 +24,7 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
             {icon}
           </span>
         )}
-        <span>{children}</span>
+        <span className="inline-flex items-center gap-1.5 leading-none shrink-0">{children}</span>
       </span>
     )
   },

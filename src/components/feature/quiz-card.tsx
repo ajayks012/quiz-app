@@ -85,27 +85,44 @@ export function QuizCard({
       <div>
         <CardHeader className="pb-3">
           {/* Top badges / status row */}
-          <div className="flex items-center justify-between gap-2 mb-2">
-            <div className="flex flex-wrap items-center gap-1.5">
-              <Badge variant="outline" size="sm" className="font-mono text-[11px] gap-1">
-                <HelpCircle className="w-3 h-3 text-slate-500" />
-                {quiz.questions.length} Qs
+          <div className="flex items-center justify-between gap-2 mb-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge
+                variant="secondary"
+                size="sm"
+                className="bg-slate-100/80 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/60 text-slate-700 dark:text-slate-300 font-medium text-xs px-2.5 py-1 gap-1.5 shadow-2xs"
+              >
+                <HelpCircle className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400 shrink-0" />
+                <span>{quiz.questions.length} Qs</span>
               </Badge>
-              <Badge variant="outline" size="sm" className="font-mono text-[11px] gap-1">
-                <Clock className="w-3 h-3 text-slate-500" />
-                {timingText}
+              <Badge
+                variant="secondary"
+                size="sm"
+                className="bg-slate-100/80 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/60 text-slate-700 dark:text-slate-300 font-medium text-xs px-2.5 py-1 gap-1.5 shadow-2xs"
+              >
+                <Clock className="w-3.5 h-3.5 text-sky-500 dark:text-sky-400 shrink-0" />
+                <span>{timingText}</span>
               </Badge>
             </div>
 
             {/* Completion / In-progress badges */}
             {inProgressAttempt ? (
-              <Badge variant="warning" size="sm" className="animate-pulse font-semibold">
+              <Badge
+                variant="warning"
+                size="sm"
+                dot
+                className="font-semibold text-xs px-2.5 py-1 gap-1.5 shadow-2xs"
+              >
                 In Progress
               </Badge>
             ) : isCompleted ? (
-              <Badge variant="success" size="sm" className="gap-1 font-semibold">
-                <CheckCircle2 className="w-3 h-3" />
-                {bestScore !== null ? `Best: ${bestScore}%` : 'Completed'}
+              <Badge
+                variant="success"
+                size="sm"
+                className="font-semibold text-xs px-2.5 py-1 gap-1.5 shadow-2xs bg-emerald-50/90 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800/70"
+              >
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                <span>{bestScore !== null ? `Best: ${bestScore}%` : 'Completed'}</span>
               </Badge>
             ) : null}
           </div>
