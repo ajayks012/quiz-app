@@ -1,9 +1,14 @@
 import * as React from 'react'
-import { ArrowUpDown, Pencil, Plus, Trash2 } from 'lucide-react'
+import { AlertTriangle, ArrowUpDown, Database, Pencil, Plus, RotateCcw, Trash2 } from 'lucide-react'
 import {
   Badge,
   Button,
   Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
   ConfirmDialog,
   Container,
   Dialog,
@@ -18,6 +23,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  toast,
 } from '@/components/ui'
 import { QuizForm, type QuizFormData } from '@/components/feature'
 import { quizService, QuizService } from '@/services'
@@ -32,7 +38,7 @@ export interface AdminDashboardPageProps {
 type SortField = 'title' | 'questions' | 'timing'
 
 export function AdminDashboardPage({ service = quizService }: AdminDashboardPageProps) {
-  const { syncTick, notifySync } = useAppStore()
+  const { syncTick, notifySync, resetData } = useAppStore()
 
   const [quizzes, setQuizzes] = React.useState<Quiz[]>([])
   const [search, setSearch] = React.useState<string>('')
@@ -47,6 +53,8 @@ export function AdminDashboardPage({ service = quizService }: AdminDashboardPage
   const [editingQuiz, setEditingQuiz] = React.useState<Quiz | null>(null)
   const [deletingQuiz, setDeletingQuiz] = React.useState<Quiz | null>(null)
   const [isSaving, setIsSaving] = React.useState<boolean>(false)
+  const [isResetDialogOpen, setIsResetDialogOpen] = React.useState<boolean>(false)
+  const [isResetting, setIsResetting] = React.useState<boolean>(false)
 
   React.useEffect(() => {
     let isCancelled = false
@@ -159,6 +167,25 @@ export function AdminDashboardPage({ service = quizService }: AdminDashboardPage
       console.error('Failed to save quiz', err)
     } finally {
       setIsSaving(false)
+    }
+  }
+
+  const handleResetConfirm = async () => {
+    setIsResetting(true)
+    try {
+      await resetData(service)
+      notifySync()
+      const updated = await service.getQuizzes()
+      setQuizzes(updated)
+      setSearch('')
+      setPage(1)
+      toast.success('All application data was restored to original seed values.', 'Data Reset')
+    } catch (err) {
+      console.error('Failed to reset data', err)
+      toast.error('Failed to reset application data', 'Error')
+    } finally {
+      setIsResetting(false)
+      setIsResetDialogOpen(false)
     }
   }
 
@@ -372,6 +399,85 @@ export function AdminDashboardPage({ service = quizService }: AdminDashboardPage
           )}
         </Card>
 
+        {/* System & Data Management Card */}
+        <Card className="border border-rose-200/80 dark:border-rose-900/40 bg-gradient-to-br from-rose-50/30 via-white to-slate-50 dark:from-rose-950/20 dark:via-slate-900 dark:to-slate-900/60 shadow-xs overflow-hidden">
+          <CardHeader className="pb-4 border-b border-rose-100 dark:border-rose-900/30">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-rose-100 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0 shadow-xs">
+                  <RotateCcw className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <CardTitle className="text-lg font-bold text-slate-900 dark:text-white">
+                      Reset Application Data
+                    </CardTitle>
+                    <Badge
+                      variant="danger"
+                      size="sm"
+                      className="font-mono text-[10px] uppercase tracking-wide"
+                    >
+                      Factory Seed
+                    </Badge>
+                  </div>
+                  <CardDescription className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+                    Restore application state back to the original assignment dataset (5 quizzes, 5
+                    users).
+                  </CardDescription>
+                </div>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="py-4 text-sm text-slate-600 dark:text-slate-300">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-2">
+              <div className="p-3.5 rounded-lg bg-white/70 dark:bg-slate-800/50 border border-slate-200/70 dark:border-slate-800">
+                <p className="font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                  <Database className="w-4 h-4 text-rose-500 shrink-0" />
+                  Restore Seed Quizzes
+                </p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
+                  Re-populates the 5 original seed quizzes with all default questions, options, and
+                  timing rules.
+                </p>
+              </div>
+              <div className="p-3.5 rounded-lg bg-white/70 dark:bg-slate-800/50 border border-slate-200/70 dark:border-slate-800">
+                <p className="font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                  <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0" />
+                  Purge Custom Data
+                </p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
+                  Permanently clears newly created quizzes, edits, and recorded user attempt scores.
+                </p>
+              </div>
+              <div className="p-3.5 rounded-lg bg-white/70 dark:bg-slate-800/50 border border-slate-200/70 dark:border-slate-800">
+                <p className="font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                  <RotateCcw className="w-4 h-4 text-indigo-500 shrink-0" />
+                  Instant Synchronisation
+                </p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
+                  Immediately syncs catalog and leaderboards across all open browser windows and
+                  tabs.
+                </p>
+              </div>
+            </div>
+          </CardContent>
+          <CardFooter className="pt-3 pb-4 border-t border-rose-100 dark:border-rose-900/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-rose-50/30 dark:bg-rose-950/10">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Need to test the initial state again? This action cannot be reversed.
+            </p>
+            <Button
+              variant="destructive"
+              size="md"
+              disabled={isResetting}
+              onClick={() => setIsResetDialogOpen(true)}
+              className="gap-2 shadow-xs shrink-0 self-start sm:self-auto"
+            >
+              <RotateCcw className={`w-4 h-4 ${isResetting ? 'animate-spin' : ''}`} />
+              Reset All Data to Seed
+            </Button>
+          </CardFooter>
+        </Card>
+
         {/* Create / Edit Modal Dialog */}
         <Dialog
           open={isFormOpen}
@@ -405,6 +511,19 @@ export function AdminDashboardPage({ service = quizService }: AdminDashboardPage
           cancelText="Cancel"
           variant="destructive"
           onConfirm={handleDeleteConfirm}
+        />
+
+        {/* Reset Confirmation Dialog */}
+        <ConfirmDialog
+          open={isResetDialogOpen}
+          onOpenChange={setIsResetDialogOpen}
+          title="Reset All Application Data to Seed?"
+          description="Are you sure you want to restore the default seed dataset? All customized quizzes, questions, mock attempts, and scores in this browser will be wiped and replaced with the original factory seed data."
+          confirmText="Yes, Reset Everything"
+          cancelText="Cancel"
+          variant="destructive"
+          loading={isResetting}
+          onConfirm={handleResetConfirm}
         />
       </Container>
     </div>

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { RotateCcw, Sparkles } from 'lucide-react'
+import { Sparkles } from 'lucide-react'
 import {
   Button,
   Card,
@@ -31,14 +31,12 @@ export function QuizListPage({
 }: QuizListPageProps) {
   const handleSelectQuiz = onNavigateQuiz ?? onSelect
   const handleSelectResults = onNavigateResults ?? onViewResults
-  const { currentUser, countries, selectedCountry, setSelectedCountry, syncTick, resetData } =
-    useAppStore()
+  const { currentUser, countries, selectedCountry, setSelectedCountry, syncTick } = useAppStore()
 
   const [quizzes, setQuizzes] = React.useState<Quiz[]>([])
   const [userAttempts, setUserAttempts] = React.useState<Attempt[]>([])
   const [search, setSearch] = React.useState<string>('')
   const [isLoading, setIsLoading] = React.useState<boolean>(true)
-  const [isResetting, setIsResetting] = React.useState<boolean>(false)
 
   // Fetch quizzes and attempts
   React.useEffect(() => {
@@ -94,16 +92,6 @@ export function QuizListPage({
     setSelectedCountry(null)
   }
 
-  const handleResetData = async () => {
-    setIsResetting(true)
-    try {
-      await resetData(service)
-      setSearch('')
-    } finally {
-      setIsResetting(false)
-    }
-  }
-
   return (
     <div className="py-8 md:py-12">
       <Container size="xl" className="space-y-8">
@@ -123,20 +111,9 @@ export function QuizListPage({
             </p>
           </div>
 
-          {/* User selector & Reset action */}
+          {/* User selector */}
           <div className="flex flex-wrap items-center gap-3">
             <UserSwitcher showLabel size="md" service={service} />
-            <Button
-              variant="outline"
-              size="md"
-              onClick={handleResetData}
-              disabled={isResetting}
-              className="gap-2 shrink-0"
-              title="Reset application data to original seed"
-            >
-              <RotateCcw className={`w-4 h-4 ${isResetting ? 'animate-spin' : ''}`} />
-              Reset Data
-            </Button>
           </div>
         </div>
 

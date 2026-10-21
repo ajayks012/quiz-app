@@ -115,4 +115,28 @@ describe('AdminDashboardPage (Task 40-44)', () => {
       expect(screen.queryByText('JavaScript Basics')).not.toBeInTheDocument()
     })
   })
+
+  it('opens reset confirmation dialog and resets data when confirmed', async () => {
+    render(<AdminDashboardPage service={mockService} />)
+
+    await waitFor(() => {
+      expect(screen.getByText('JavaScript Basics')).toBeInTheDocument()
+    })
+
+    const resetBtn = screen.getByRole('button', { name: /reset all data to seed/i })
+    expect(resetBtn).toBeInTheDocument()
+    fireEvent.click(resetBtn)
+
+    // Confirm dialog opens
+    await waitFor(() => {
+      expect(screen.getByText(/reset all application data to seed\?/i)).toBeInTheDocument()
+    })
+
+    const confirmBtn = screen.getByRole('button', { name: /yes, reset everything/i })
+    fireEvent.click(confirmBtn)
+
+    await waitFor(() => {
+      expect(screen.getByText('JavaScript Basics')).toBeInTheDocument()
+    })
+  })
 })

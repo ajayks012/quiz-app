@@ -108,19 +108,4 @@ describe('QuizListPage (Task 39)', () => {
     fireEvent.click(viewResultBtn)
     expect(onNavigateResults).toHaveBeenCalledWith('q4')
   })
-
-  it('resets data when Reset Data button is clicked', async () => {
-    render(<QuizListPage service={mockService} />)
-
-    await waitFor(() => {
-      expect(screen.getByText('JavaScript Basics')).toBeInTheDocument()
-    })
-
-    const resetBtn = screen.getByRole('button', { name: /reset data/i })
-    fireEvent.click(resetBtn)
-
-    await waitFor(() => {
-      expect(screen.getByText('JavaScript Basics')).toBeInTheDocument()
-    })
-  })
 })
