@@ -24,3 +24,19 @@ dist-ssr
 *.sw?
 
 graphify-out
+
+# Python bytecode & cache created when running UI/UX Pro Max search scripts
+.agents/skills/ui-ux-pro-max/__pycache__/
+.agents/skills/ui-ux-pro-max/*.pyc
+.agents/skills/ui-ux-pro-max/**/*.pyc
+
+# Local Python virtual environments (if created locally for BM25/search scripts)
+.agents/skills/ui-ux-pro-max/.venv/
+.agents/skills/ui-ux-pro-max/env/
+
+# OS/Editor junk files
+.agents/skills/**/.DS_Store
+.agents/skills/**/Thumbs.db
+
+# Generated output/test logs (optional)
+.agents/skills/ui-ux-pro-max/*.log

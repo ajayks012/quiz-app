@@ -382,7 +382,7 @@ export function AdminDashboardPage({ service = quizService }: AdminDashboardPage
             }
           }}
         >
-          <DialogContent size="xl" className="max-h-[90vh] overflow-y-auto">
+          <DialogContent size="2xl" className="p-0 overflow-hidden max-h-[90vh]">
             <QuizForm
               initialData={editingQuiz}
               onSubmit={handleFormSubmit}

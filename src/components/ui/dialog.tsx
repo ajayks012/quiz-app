@@ -65,7 +65,7 @@ export const DialogTrigger: React.FC<DialogTriggerProps> = ({ children }) => {
 }
 
 export interface DialogContentProps extends React.HTMLAttributes<HTMLDivElement> {
-  size?: 'sm' | 'md' | 'lg' | 'xl' | 'full'
+  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full'
   hideCloseButton?: boolean
 }
 
@@ -93,40 +93,39 @@ export const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps
     if (!context.open) return null
 
     const dialogContent = (
-      <div
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto"
-        role="presentation"
-      >
+      <div className="fixed inset-0 z-50 overflow-y-auto" role="presentation">
         <div
-          className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs transition-opacity animate-in fade-in duration-200"
+          className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity animate-in fade-in duration-200"
           onClick={() => context.setOpen(false)}
           aria-hidden="true"
         />
 
-        <div
-          ref={ref}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby={context.titleId}
-          aria-describedby={context.descriptionId}
-          className={cn(
-            dialogContentVariants({ size }),
-            'z-10 animate-in fade-in zoom-in-95 duration-200',
-            className,
-          )}
-          {...props}
-        >
-          {!hideCloseButton && (
-            <button
-              type="button"
-              onClick={() => context.setOpen(false)}
-              className="absolute right-4 top-4 rounded-full p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800 dark:hover:text-slate-200 transition-colors"
-              aria-label="Close dialog"
-            >
-              <X className="w-4 h-4" aria-hidden="true" />
-            </button>
-          )}
-          {children}
+        <div className="flex min-h-full items-center justify-center p-3 sm:p-4 md:p-6 text-center">
+          <div
+            ref={ref}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={context.titleId}
+            aria-describedby={context.descriptionId}
+            className={cn(
+              dialogContentVariants({ size }),
+              'relative z-10 w-full text-left transition-all duration-200 animate-in fade-in zoom-in-95',
+              className,
+            )}
+            {...props}
+          >
+            {!hideCloseButton && (
+              <button
+                type="button"
+                onClick={() => context.setOpen(false)}
+                className="absolute right-4 top-4 z-20 rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800 dark:hover:text-slate-200 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                aria-label="Close dialog"
+              >
+                <X className="w-4 h-4" aria-hidden="true" />
+              </button>
+            )}
+            {children}
+          </div>
         </div>
       </div>
     )
