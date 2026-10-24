@@ -29,6 +29,23 @@ export function RootComponent() {
   )
 }
 
+export function NotAccessComponent() {
+  const navigate = useNavigate()
+  return (
+    <ContentLayout
+      pageTitle="401 - No access"
+      pageDescription=""
+    >
+      <Card className="max-w-md p-6 text-center">
+        <p className="text-sm text-slate-500 mb-4">No Access.</p>
+        <Button variant="primary" onClick={() => navigate({ to: '/' })}>
+          Back to Home
+        </Button>
+      </Card>
+    </ContentLayout>
+  )
+}
+
 export function NotFoundComponent() {
   const navigate = useNavigate()
   return (
@@ -104,6 +121,19 @@ export function QuizResultsComponent() {
   const quizId = params.quizId ?? ''
   const navigate = useNavigate()
 
+  const navigateToLeaderboard = (category: string) => {
+    if (!category) {
+      navigate({
+        to: '/leaderboard',
+      })
+    } else {
+      navigate({
+        to: '/leaderboard',
+        search:(prev)=>({...prev, category })
+      })
+    }
+  }
+
   return (
     <QuizResultsPage
       quizId={quizId}
@@ -113,11 +143,7 @@ export function QuizResultsComponent() {
           params: { quizId: id },
         })
       }
-      onNavigateLeaderboard={() =>
-        navigate({
-          to: '/leaderboard',
-        })
-      }
+      onNavigateLeaderboard={navigateToLeaderboard}
       onNavigateHome={() => navigate({ to: '/' })}
     />
   )

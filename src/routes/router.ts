@@ -3,11 +3,13 @@ import {
   AdminComponent,
   HomeComponent,
   LeaderboardComponent,
+  NotAccessComponent,
   NotFoundComponent,
   QuizResultsComponent,
   QuizTakeComponent,
   RootComponent,
 } from './route-components'
+import { useAppStore } from '@/store'
 
 // Root route wraps every page in GlobalLayout
 export const rootRoute = createRootRoute({
@@ -29,7 +31,12 @@ export const leaderboardRoute = createRoute({
   component: LeaderboardComponent,
 })
 
-// 3. Admin Dashboard Route
+export const NoAccessRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/no-access',
+  component: NotAccessComponent,
+})
+
 export const adminRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/admin',
@@ -62,6 +69,7 @@ export const routeTree = rootRoute.addChildren([
   indexRoute,
   leaderboardRoute,
   adminRoute,
+  NoAccessRoute,
   quizParentRoute.addChildren([quizTakeRoute, quizResultsRoute]),
 ])
 

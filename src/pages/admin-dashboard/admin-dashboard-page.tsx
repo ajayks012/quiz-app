@@ -39,6 +39,7 @@ import { quizService, QuizService } from '@/services'
 import { useAppStore } from '@/store'
 import type { Quiz } from '@/types'
 import { formatTime } from '@/utils'
+import {redirect, useNavigate } from '@tanstack/react-router'
 
 export interface AdminDashboardPageProps {
   service?: QuizService
@@ -48,7 +49,7 @@ type SortField = 'title' | 'questions' | 'timing'
 export type AdminTab = 'quizzes' | 'reset'
 
 export function AdminDashboardPage({ service = quizService }: AdminDashboardPageProps) {
-  const { syncTick, notifySync, resetData } = useAppStore()
+  const { currentUser, syncTick, notifySync, resetData } = useAppStore()
 
   const [activeTab, setActiveTab] = React.useState<AdminTab>('quizzes')
   const [quizzes, setQuizzes] = React.useState<Quiz[]>([])
@@ -66,6 +67,17 @@ export function AdminDashboardPage({ service = quizService }: AdminDashboardPage
   const [isSaving, setIsSaving] = React.useState<boolean>(false)
   const [isResetDialogOpen, setIsResetDialogOpen] = React.useState<boolean>(false)
   const [isResetting, setIsResetting] = React.useState<boolean>(false)
+  const navigate = useNavigate();
+
+  React.useEffect(()=>{
+    if(currentUser){
+      const auth = ()=>{
+        if(currentUser?.role !=='admin')
+          navigate({to:"/no-access"})
+      }
+      auth();
+    }
+  },[currentUser])
 
   React.useEffect(() => {
     let isCancelled = false

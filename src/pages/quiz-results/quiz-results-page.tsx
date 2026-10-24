@@ -31,12 +31,12 @@ export interface QuizResultsPageProps {
   userId?: string
   service?: QuizService
   onRetake?: (quizId: string) => void
-  onNavigateLeaderboard?: () => void
+  onNavigateLeaderboard?: (category:string) => void
   onNavigateHome?: () => void
 }
 
 export function QuizResultsPage({
-  quizId,
+  quizId = "",
   userId,
   service = quizService,
   onRetake,
@@ -197,7 +197,7 @@ export function QuizResultsPage({
           <Button
             variant="primary"
             size="sm"
-            onClick={onNavigateLeaderboard}
+            onClick={()=>onNavigateLeaderboard(quizId || "")}
             className="gap-1.5 bg-indigo-600 text-white"
           >
             <Trophy className="w-4 h-4" />
@@ -304,7 +304,7 @@ export function QuizResultsPage({
       </Card>
 
       {/* Question Breakdown Section (Task 52) */}
-      <div className="space-y-4">
+      {!quiz.retakesAllowed && <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
             <span>Detailed Question Review</span>
@@ -424,7 +424,7 @@ export function QuizResultsPage({
             )
           })}
         </div>
-      </div>
+      </div>}
     </div>
   )
 }

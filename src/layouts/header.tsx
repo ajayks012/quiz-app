@@ -5,6 +5,7 @@ import { Container, IconButton, Tooltip } from '@/components/ui'
 import { useTheme } from '@/hooks'
 import { NavigationDesktop, NavigationMobile } from './navigation'
 import { DEFAULT_NAV_ITEMS, type NavigationItem } from './navigation.types'
+import { useAppStore } from '@/store'
 
 export interface HeaderProps extends React.HTMLAttributes<HTMLElement> {
   currentPath?: string
@@ -33,6 +34,9 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(
   ) => {
     const { isDark, toggleTheme } = useTheme()
     const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
+    const { currentUser } = useAppStore()
+
+    const filteredNavItems = navItems.filter((item)=> (!currentUser ? true : item.label ==='Admin' && currentUser.role==="admin") || (item.label!=='Admin') )
 
     // Close mobile menu on resize to desktop
     React.useEffect(() => {
@@ -87,7 +91,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(
               {/* Desktop Navigation */}
               <div className="hidden md:flex items-center">
                 <NavigationDesktop
-                  items={navItems}
+                  items={filteredNavItems}
                   currentPath={currentPath}
                   onNavigate={onNavigate}
                 />

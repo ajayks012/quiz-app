@@ -41,6 +41,7 @@ export function QuizTakePage({
     start,
     selectOption,
     submitAnswer,
+    completeEarly,
   } = useQuizAttempt({
     quizId,
     userId: currentUser?.id,
@@ -82,6 +83,29 @@ export function QuizTakePage({
 
   if (!quiz) {
     return null
+  }
+
+  if(overallCountdown.remainingSeconds === 0){
+
+    return (<div className="max-w-xl mx-auto py-12 px-4 text-center">
+        <Card className="p-8 border-slate-200 dark:border-slate-800 space-y-4 bg-white dark:bg-slate-900">
+          
+          <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white">
+            Quiz Time limit exhausted!
+          </h2>
+          <p className="text-sm text-slate-600 dark:text-slate-400">
+            Your answers have been calculated and saved to the leaderboard.
+          </p>
+          <div className="pt-2 flex justify-center gap-3">
+            <Button variant="primary" onClick={() => onNavigateResults?.(quizId)}>
+              View Results & Breakdown
+            </Button>
+            <Button variant="outline" onClick={completeEarly}>
+              Back to Quizzes
+            </Button>
+          </div>
+        </Card>
+      </div>)
   }
 
   // Active in-progress question screen (Tasks 46–51)

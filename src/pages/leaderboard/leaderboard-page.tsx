@@ -21,6 +21,7 @@ import { useAppStore } from '@/store'
 import type { Country, LeaderboardEntry, Quiz } from '@/types'
 import { formatTime } from '@/utils'
 import { Award, Medal, RotateCcw, Trophy, User as UserIcon } from 'lucide-react'
+import { useSearch } from '@tanstack/react-router'
 
 export interface LeaderboardPageProps {
   service?: QuizService
@@ -33,15 +34,19 @@ export function LeaderboardPage({
   initialQuizId = 'all',
   initialCountry = 'all',
 }: LeaderboardPageProps) {
+  const search = useSearch({from:"/leaderboard"});
+const {category} = search;
+
   const currentUser = useAppStore((state) => state.currentUser)
   const syncTick = useAppStore((state) => state.syncTick)
 
   const [entries, setEntries] = React.useState<LeaderboardEntry[]>([])
   const [quizzes, setQuizzes] = React.useState<Quiz[]>([])
   const [countries, setCountries] = React.useState<Country[]>([])
-  const [selectedQuizId, setSelectedQuizId] = React.useState<string>(initialQuizId)
+  const [selectedQuizId, setSelectedQuizId] = React.useState<string>(category || initialQuizId)
   const [selectedCountry, setSelectedCountry] = React.useState<string>(initialCountry)
   const [isLoading, setIsLoading] = React.useState<boolean>(true)
+
 
   // Fetch filter options (quizzes and countries)
   React.useEffect(() => {
